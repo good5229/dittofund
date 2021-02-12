@@ -1,0 +1,28 @@
+{% extends "../base.html" %}
+{% load static i18n %}
+
+
+{% block content %}
+    <div>Portfolio Page</div>
+    <div class="container">
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-success" href="#">Enroll Portfolio</a>
+        </div>
+        <table class="table">
+            <thead>
+            <td>헤지펀드명</td>
+            <td>작성연도</td>
+            <td>작성분기</td>
+            </thead>
+            <tbody>
+            {% for portfolio in portfolios %}
+                <tr>
+                    <td>{{ portfolio.name }}</td>
+                    <td>{{ portfolio.years }}</td>
+                    <td>{{ portfolio.period }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
