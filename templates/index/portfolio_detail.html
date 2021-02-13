@@ -1,0 +1,29 @@
+{% extends "../base.html" %}
+{% load static i18n %}
+
+{% block content %}
+    <div class="container">
+        <table class="table">
+            <thead class="text-center">
+            <td>종목명</td>
+            <td>title of class</td>
+            <td>cusip</td>
+            <td>보유수량</td>
+            <td>가치(x$1000)</td>
+            <td>이전 분기와 비교</td>
+            </thead>
+            <tbody class="text-center">
+            {% for datum in data %}
+                <tr>
+                    <td>{{ datum.name }}</td>
+                    <td>{{ datum.title_of_class }}</td>
+                    <td>{{ datum.cusip }}</td>
+                    <td>{{ datum.shares }}</td>
+                    <td>{{ datum.values }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -10,6 +10,9 @@ class HedgeFund(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    def get_absolute_url(self):
+        return f'/index/hedgefund/{self.pk}'
+
 
 class Portfolio(models.Model):
     # 1. 모델의 데이터를 다음과 같이 정의한다.
@@ -22,8 +25,14 @@ class Portfolio(models.Model):
     name = models.ForeignKey(HedgeFund, on_delete=models.CASCADE)
     url = models.CharField(max_length=500)
 
+    class Meta:
+        unique_together = ('name', 'years', 'period', )
+
     def __str__(self):
         return f'{self.years}년 {self.period}분기 - {self.name} 보고서'
+
+    def get_absolute_url(self):
+        return f'/index/portfolio/{self.pk}'
 
 
 class Data(models.Model):

@@ -1,14 +1,11 @@
 {% extends "../base.html" %}
 {% load static i18n %}
 
-
 {% block content %}
     <div class="container">
-        {% if user.is_authenticated %}
-            <div class="d-flex justify-content-end">
-                <a class="btn btn-success" href="/index/create_portfolio/" role="button">Enroll Portfolio</a>
-            </div>
-        {% endif %}
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-success" href="#">Enroll Hedgefund</a>
+        </div>
         <table class="table">
             <thead class="text-center">
             <td>헤지펀드명</td>
@@ -22,7 +19,7 @@
                     <td>{{ portfolio.name }}</td>
                     <td>{{ portfolio.years }}</td>
                     <td>{{ portfolio.period }}</td>
-                    <td><a href="{{ portfolio.get_absolute_url }}" class="btn btn-primary">보러가기</a></td>
+                    <td><a href="#" class="btn btn-primary">보러가기</a></td>
                 </tr>
             {% endfor %}
             </tbody>
