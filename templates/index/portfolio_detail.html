@@ -3,7 +3,8 @@
 {% load humanize %}
 
 {% block content %}
-    <div class="h3 text-center">{{ hedgefund }} : {{ profit_and_loss|intcomma }}</div>
+    <div class="h3 text-center">{{ hedgefund }}</div>
+    <div class="h5 text-center">이전분기 대비 수익 : {{ profit_and_loss|intword }}</div>
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="text-center">{{ years }}년 {{ period }}분기</div>
