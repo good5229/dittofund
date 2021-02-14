@@ -20,9 +20,6 @@
                 <div class="navbar-nav">
                     <a class="nav-link" href="{% url 'index:hedgefund' %}">Hedgefund</a>
                     <a class="nav-link" href="{% url 'index:portfolio' %}">Portfolio</a>
-                    {% if user.is_authenticated %}
-                        <a class="nav-link" href='admin/'><i class="fas fa-tools"></i></a>
-                    {% endif %}
                 </div>
             </div>
         </div>
