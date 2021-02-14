@@ -2,28 +2,67 @@
 {% load static i18n %}
 
 {% block content %}
-    <div class="container">
-        <table class="table">
-            <thead class="text-center">
-            <td>종목명</td>
-            <td>title of class</td>
-            <td>cusip</td>
-            <td>보유수량</td>
-            <td>가치(x$1000)</td>
-            <td>이전 분기와 비교</td>
-            </thead>
-            <tbody class="text-center">
-            {% for datum in data %}
-                <tr>
-                    <td>{{ datum.name }}</td>
-                    <td>{{ datum.title_of_class }}</td>
-                    <td>{{ datum.cusip }}</td>
-                    <td>{{ datum.shares }}</td>
-                    <td>{{ datum.values }}</td>
-                    <td></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <table class="table">
+                <thead class="text-center">
+                <td>종목명</td>
+                <td>title of class</td>
+                <td>cusip</td>
+                <td>보유수량</td>
+                <td>가치(x$1000)</td>
+                <td>이전 분기와 비교</td>
+                </thead>
+                <tbody class="text-center">
+                {% for datum in data %}
+                    <tr>
+                        <td>{{ datum.name }}</td>
+                        <td>{{ datum.title_of_class }}</td>
+                        <td>{{ datum.cusip }}</td>
+                        <td>{{ datum.shares }}</td>
+                        <td>{{ datum.values }}</td>
+                        <td></td>
+                        {#                            {% for pre_data in previous_data %}#}
+                        {#                                {% if pre_data == 'NEW' %}#}
+                        {#                                    <td>{{ pre_data }}</td>#}
+                        {#                                {% else %}#}
+                        {#                                    <td>{{ pre_data.shares }}</td>#}
+                        {#                                {% endif %}#}
+                        {#                            {% endfor %}#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if previous_data %}
+            <div class="col-12 col-md-6">
+                <table class="table">
+                    <thead class="text-center">
+                    <td>종목명</td>
+                    <td>title of class</td>
+                    <td>cusip</td>
+                    <td>보유수량</td>
+                    <td>가치(x$1000)</td>
+                    <td>이전 분기와 비교</td>
+                    </thead>
+                    <tbody class="text-center">
+                    {% for pre_datum in previous_data %}
+                        <tr>
+                            <td>{{ pre_datum.name }}</td>
+                            <td>{{ pre_datum.title_of_class }}</td>
+                            <td>{{ pre_datum.cusip }}</td>
+                            <td>{{ pre_datum.shares }}</td>
+                            <td>{{ pre_datum.values }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                <div class="h1">NO DATA</div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
