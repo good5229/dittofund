@@ -65,9 +65,6 @@ class PortfolioDetail(DetailView):
             context['current'].append([name, title, cusip, shares, values])
         context['total_val'] = current_value
 
-        previous_year = self.object.years
-        previous_period = self.object.period
-
         if self.object.period == 1:
             previous_period = 4
             previous_year = self.object.years - 1
