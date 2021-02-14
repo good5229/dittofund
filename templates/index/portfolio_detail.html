@@ -16,12 +16,12 @@
                 <td>가치(x$1000)</td>
                 <td>변동</td>
                 </thead>
-                <tbody class="text-center">
+                <tbody class="text-center" style="font-size:12px;">
                 {% for data in current %}
                     <tr>
                         {% for source in data %}
                             {% if source == 'NEW' %}
-                                <td class="bg-success">{{ source }}</td>
+                                <td class="text-white" style="background-color: deepskyblue;">{{ source }}</td>
                             {% elif source|slice:":3" == "BUY" %}
                                 <td style="background-color:#a6edc3">{{ source }}</td>
                             {% elif source|slice:":4" == "SELL" %}
@@ -49,11 +49,15 @@
                     <td>가치(x$1000)</td>
                     <td>변동</td>
                     </thead>
-                    <tbody class="text-center">
+                <tbody class="text-center" style="font-size:12px;">
                     {% for pre_data in previous_data %}
                         <tr>
                             {% for source in pre_data %}
-                                <td>{{ source }}</td>
+                                {% if source == 'REMOVED' %}
+                                    <td class="text-white" style="background-color: crimson;">{{ source }}</td>
+                                {% else %}
+                                    <td>{{ source }}</td>
+                                {% endif %}
                             {% endfor %}
                         </tr>
                     {% endfor %}

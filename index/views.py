@@ -66,10 +66,15 @@ class PortfolioDetail(DetailView):
         context['total_val'] = current_value
 
         previous_year = self.object.years
-        previous_period = self.object.period - 1
+        previous_period = self.object.period
+
         if self.object.period == 1:
-            previous_period == 4
-            previous_year == self.object.years - 1
+            previous_period = 4
+            previous_year = self.object.years - 1
+        else:
+            previous_year = self.object.years
+            previous_period = self.object.period - 1
+
         context['previous_year'] = previous_year
         context['previous_period'] = previous_period
 
@@ -78,7 +83,7 @@ class PortfolioDetail(DetailView):
         if previous_portfolio:
             previous_data = Data.objects.filter(portfolio=previous_portfolio.pk).all()
             previous_value = 0
-            context['previous_data']=[]
+            context['previous_data'] = []
             for object in previous_data:
                 name = object.name
                 cusip = object.cusip
@@ -87,19 +92,18 @@ class PortfolioDetail(DetailView):
                 values = object.values
                 previous_value += shares * values
                 removed = '-'
-                if not Data.objects.filter(portfolio=self.object.pk, name=name, cusip=cusip, title_of_class=title).first():
+                if not Data.objects.filter(portfolio=self.object.pk, cusip=cusip).first():
                     removed = "REMOVED"
                 context['previous_data'].append([name, title, cusip, shares, values, removed])
             context['previous_val'] = previous_value
             i = 0
             for datum in Data.objects.filter(portfolio=self.object.pk).all():
-                previous = Data.objects.filter(portfolio=previous_portfolio, name=datum.name, cusip=datum.cusip,
-                                               title_of_class=datum.title_of_class).first()
+                previous = Data.objects.filter(portfolio=previous_portfolio, cusip=datum.cusip).first()
                 if previous:
                     subtract = datum.shares - previous.shares
                     if subtract == 0:
                         subtract = '-'
-                    elif subtract>0:
+                    elif subtract > 0:
                         subtract = f'BUY // {subtract}'
                     else:
                         subtract = f'SELL // {subtract}'
@@ -107,7 +111,10 @@ class PortfolioDetail(DetailView):
                 else:
                     context['current'][i].append("NEW")
                 i += 1
-            context['profit_and_loss'] = current_value-previous_value
+            if previous_value:
+                context['profit_and_loss'] = current_value - previous_value
+            else:
+                context['profit_and_loss'] = current_value
 
         return context
 
@@ -168,5 +175,3 @@ def add_portfolio_data(request, pk):
         Data.objects.create(portfolio=portfolio, name=data_name[0],
                             title_of_class=title_of_class[i].text, cusip=cusip[i].text,
                             shares=sshPrnamt[i].text, values=value[i].text)
-
-
