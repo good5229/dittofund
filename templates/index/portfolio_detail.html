@@ -2,8 +2,10 @@
 {% load static i18n %}
 
 {% block content %}
+    <div class="h3 text-center">{{ hedgefund }}</div>
     <div class="row">
         <div class="col-12 col-md-6">
+            <div class="text-center">{{ years }}년 {{ period }}분기</div>
             <table class="table">
                 <thead class="text-center">
                 <td>종목명</td>
@@ -36,6 +38,7 @@
         </div>
         {% if previous_data %}
             <div class="col-12 col-md-6">
+                <div class="text-center">{{ previous_year }}년 {{ previous_period }}분기</div>
                 <table class="table">
                     <thead class="text-center">
                     <td>종목명</td>

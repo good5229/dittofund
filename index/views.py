@@ -51,11 +51,16 @@ class PortfolioDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PortfolioDetail, self).get_context_data()
         context['data'] = Data.objects.filter(portfolio=self.object.pk).all()
+        context['hedgefund'] = self.object.name
+        context['years'] = self.object.years
+        context['period'] = self.object.period
         previous_year = self.object.years
         previous_period = self.object.period - 1
         if self.object.period == 1:
             previous_period == 4
             previous_year == self.object.years - 1
+        context['previous_year'] = previous_year
+        context['previous_period'] = previous_period
         previous_portfolio = Portfolio.objects.filter(name=self.object.name, years=previous_year,
                                                       period=previous_period).first()
 
