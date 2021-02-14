@@ -1,5 +1,4 @@
 # Create your views here.
-import pprint
 
 import requests
 from bs4 import BeautifulSoup
@@ -50,10 +49,22 @@ class PortfolioDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PortfolioDetail, self).get_context_data()
-        context['data'] = Data.objects.filter(portfolio=self.object.pk).all()
+        data_total = Data.objects.filter(portfolio=self.object.pk).all()
         context['hedgefund'] = self.object.name
         context['years'] = self.object.years
         context['period'] = self.object.period
+        context['current'] = []
+        current_value = 0
+        for object in data_total:
+            name = object.name
+            cusip = object.cusip
+            title = object.title_of_class
+            shares = object.shares
+            values = object.values
+            current_value += shares * values
+            context['current'].append([name, title, cusip, shares, values])
+        context['total_val'] = current_value
+
         previous_year = self.object.years
         previous_period = self.object.period - 1
         if self.object.period == 1:
@@ -61,22 +72,42 @@ class PortfolioDetail(DetailView):
             previous_year == self.object.years - 1
         context['previous_year'] = previous_year
         context['previous_period'] = previous_period
+
         previous_portfolio = Portfolio.objects.filter(name=self.object.name, years=previous_year,
                                                       period=previous_period).first()
-
         if previous_portfolio:
-            context['previous_data'] = Data.objects.filter(portfolio=previous_portfolio.pk).all()
-            context['subtract'] = []
+            previous_data = Data.objects.filter(portfolio=previous_portfolio.pk).all()
+            previous_value = 0
+            context['previous_data']=[]
+            for object in previous_data:
+                name = object.name
+                cusip = object.cusip
+                title = object.title_of_class
+                shares = object.shares
+                values = object.values
+                previous_value += shares * values
+                removed = '-'
+                if not Data.objects.filter(portfolio=self.object.pk, name=name, cusip=cusip, title_of_class=title).first():
+                    removed = "REMOVED"
+                context['previous_data'].append([name, title, cusip, shares, values, removed])
+            context['previous_val'] = previous_value
+            i = 0
             for datum in Data.objects.filter(portfolio=self.object.pk).all():
                 previous = Data.objects.filter(portfolio=previous_portfolio, name=datum.name, cusip=datum.cusip,
                                                title_of_class=datum.title_of_class).first()
                 if previous:
                     subtract = datum.shares - previous.shares
-                    context['subtract'].append([datum.name, subtract])
+                    if subtract == 0:
+                        subtract = '-'
+                    elif subtract>0:
+                        subtract = f'BUY // {subtract}'
+                    else:
+                        subtract = f'SELL // {subtract}'
+                    context['current'][i].append(subtract)
                 else:
-                    context['subtract'].append("NEW")
-
-            pprint.pprint(context['subtract'])
+                    context['current'][i].append("NEW")
+                i += 1
+            context['profit_and_loss'] = current_value-previous_value
 
         return context
 
@@ -137,3 +168,5 @@ def add_portfolio_data(request, pk):
         Data.objects.create(portfolio=portfolio, name=data_name[0],
                             title_of_class=title_of_class[i].text, cusip=cusip[i].text,
                             shares=sshPrnamt[i].text, values=value[i].text)
+
+

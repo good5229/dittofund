@@ -1,8 +1,9 @@
 {% extends "../base.html" %}
 {% load static i18n %}
+{% load humanize %}
 
 {% block content %}
-    <div class="h3 text-center">{{ hedgefund }}</div>
+    <div class="h3 text-center">{{ hedgefund }} : {{ profit_and_loss|intcomma }}</div>
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="text-center">{{ years }}년 {{ period }}분기</div>
@@ -13,26 +14,26 @@
                 <td>cusip</td>
                 <td>보유수량</td>
                 <td>가치(x$1000)</td>
-                <td>이전 분기와 비교</td>
+                <td>변동</td>
                 </thead>
                 <tbody class="text-center">
-                {% for datum in data %}
+                {% for data in current %}
                     <tr>
-                        <td>{{ datum.name }}</td>
-                        <td>{{ datum.title_of_class }}</td>
-                        <td>{{ datum.cusip }}</td>
-                        <td>{{ datum.shares }}</td>
-                        <td>{{ datum.values }}</td>
-                        <td></td>
-                        {#                            {% for pre_data in previous_data %}#}
-                        {#                                {% if pre_data == 'NEW' %}#}
-                        {#                                    <td>{{ pre_data }}</td>#}
-                        {#                                {% else %}#}
-                        {#                                    <td>{{ pre_data.shares }}</td>#}
-                        {#                                {% endif %}#}
-                        {#                            {% endfor %}#}
+                        {% for source in data %}
+                            {% if source == 'NEW' %}
+                                <td class="bg-success">{{ source }}</td>
+                            {% elif source|slice:":3" == "BUY" %}
+                                <td style="background-color:#a6edc3">{{ source }}</td>
+                            {% elif source|slice:":4" == "SELL" %}
+                                <td style="background-color:#f7dcf7">{{ source }}</td>
+                            {% else %}
+                                <td>{{ source }}</td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 {% endfor %}
+                <td class="bg-primary text-white">total_val</td>
+                <td colspan="5">{{ total_val|intcomma }}</td>
                 </tbody>
             </table>
         </div>
@@ -46,19 +47,19 @@
                     <td>cusip</td>
                     <td>보유수량</td>
                     <td>가치(x$1000)</td>
-                    <td>이전 분기와 비교</td>
+                    <td>변동</td>
                     </thead>
                     <tbody class="text-center">
-                    {% for pre_datum in previous_data %}
+                    {% for pre_data in previous_data %}
                         <tr>
-                            <td>{{ pre_datum.name }}</td>
-                            <td>{{ pre_datum.title_of_class }}</td>
-                            <td>{{ pre_datum.cusip }}</td>
-                            <td>{{ pre_datum.shares }}</td>
-                            <td>{{ pre_datum.values }}</td>
-                            <td></td>
+                            {% for source in pre_data %}
+                                <td>{{ source }}</td>
+                            {% endfor %}
                         </tr>
                     {% endfor %}
+
+                    <td class="bg-primary text-white">previous_val</td>
+                    <td colspan="5">{{ previous_val|intcomma }}</td>
                     </tbody>
                 </table>
             </div>
